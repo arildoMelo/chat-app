@@ -6,6 +6,7 @@ const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
 const {generateMessage} = require('./utils/message');
+const {generateLocationMessage} = require('./utils/message');
 
 var publicPath = path.join(__dirname, '../public');
 
@@ -26,6 +27,12 @@ io.on('connection', (socket) =>{
     socket.on('createMessage', (msg, callback) => {
         console.log('create msg', msg);
         io.emit('newMessage', generateMessage(msg.from,msg.text));
+        callback('This is an ack from the server');
+    });
+
+    socket.on('createLocationMessage', (coords, callback) => {
+        console.log('create location msg', coords);
+        io.emit('newLocationMessage', generateLocationMessage('Admin',coords.latitude,coords.longitude));
         callback('This is an ack from the server');
     });
     
