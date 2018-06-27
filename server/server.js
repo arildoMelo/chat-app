@@ -20,6 +20,16 @@ io.on('connection', (socket) =>{
     socket.on('disconnect', function(){
         console.log('User was disconnected');
     });
+
+    socket.emit('newMessage', {
+        from:'Server',
+        text:'Hi from server',
+        createAt: new Date()
+    });
+
+    socket.on('createMessage', (msg) => {
+        console.log('create msg', msg);
+    })
 });
 
 var port = process.env.PORT || 3000;
