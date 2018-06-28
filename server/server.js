@@ -22,6 +22,7 @@ app.use(express.static(publicPath));
 
 io.on('connection', (socket) =>{
     console.log('New user Connected ');
+    
 
     
     socket.on('join', (params, callback) => {
