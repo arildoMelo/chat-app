@@ -41,15 +41,24 @@ io.on('connection', (socket) =>{
     })
 
     socket.on('createMessage', (msg, callback) => {
-        console.log('create msg', msg);
-        io.emit('newMessage', generateMessage(msg.from,msg.text));
-        callback('This is an ack from the server');
+        var user = users.getUser(socket.id);
+        if(user, isRealString(msg.text)){
+            io.to(user.room).emit('newMessage', generateMessage(user.name,msg.text));
+            callback();
+        }else{
+            callback('Not a valide user or message');
+        }
     });
 
     socket.on('createLocationMessage', (coords, callback) => {
-        console.log('create location msg', coords);
-        io.emit('newLocationMessage', generateLocationMessage('Admin',coords.latitude,coords.longitude));
-        callback('This is an ack from the server');
+        var user = users.getUser(socket.id);
+        if(user && coords){
+            io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name,coords.latitude,coords.longitude));
+            callback();
+        }else{
+            callback('Not a valide user or coords');
+        }
+        
     });
     
     socket.on('disconnect', function(){
